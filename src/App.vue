@@ -20,7 +20,7 @@ import {
                             </div>
                             <n-flex justify="center" style="margin: 3px 0">
                                 <n-text depth="3">
-                                    OSS Share Helper 0.1&nbsp;&nbsp;·&nbsp;&nbsp;Made by HynemanKan
+                                    OSS Share Helper 0.2&nbsp;&nbsp;·&nbsp;&nbsp;Made by HynemanKan
                                 </n-text>
                             </n-flex>
                         </n-flex>
