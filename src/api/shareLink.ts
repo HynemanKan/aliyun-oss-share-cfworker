@@ -1,6 +1,23 @@
 import { authAxios } from "@/api/_api";
 import axios from "axios";
 
+export const createUploadLink = (fileUri:string) =>{
+    return new Promise<string>((resolve,reject)=>{
+        authAxios.post("/api/v1/file/preUpload", {
+            path:fileUri,
+        }).then(data=>{
+            if(data.data["code"]=="success"){
+                const url = data.data["uploadLink"]
+                if(url){
+                    resolve(url);
+                    return;
+                }
+            }
+            reject(data.data["message"])
+        }).catch(reject);
+    })
+}
+
 export const createShareLink = (fileUri:string,timeExpired:number,password:string,ossType:string)=>{
     return new Promise<string>((resolve, reject)=>{
         authAxios.post("/api/v1/file/sign",{
@@ -44,3 +61,4 @@ export const getFileInfo = (token:string,password:string)=>{
         }).catch(reject)
     })
 }
+

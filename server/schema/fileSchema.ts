@@ -7,3 +7,9 @@ export const fileSchema = Joi.object<{
     token: Joi.string().required(),
     password: Joi.string().required(),
 })
+
+export const preUploadSchema = Joi.object<{
+    path:string,
+}>({
+    path:Joi.string().required(),
+})

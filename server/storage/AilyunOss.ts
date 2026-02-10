@@ -1,5 +1,5 @@
 import OSS from "ali-oss"
-import {OssStorage,type FileInfo} from "./types";
+import {OssStorage, type FileInfo, UploadInfo} from "./types";
 import {OssClient} from "../client/AliyunOssClient";
 
 
@@ -20,6 +20,8 @@ export class AilyunOss implements OssStorage {
             region:env.ALIYUN_OSS_REGION,
             bucket:env.ALIYUN_OSS_BUCKET,
             endpoint:env.ALIYUN_OSS_END_POINT,
+            secure:true,
+            authorizationV4: true,
         })
         this.client = new OssClient(
             env.ALIYUN_OSS_AK,
@@ -34,9 +36,16 @@ export class AilyunOss implements OssStorage {
         try {
             const res = await this.client.getMeta(uri);
             console.log(res);
-            const url = this.officialClient.signatureUrl(uri,{
-                expires:this.linkTimeout
-            })
+            // const url = await  this.officialClient.signatureUrlV4(uri,{
+            //     expires:this.linkTimeout,
+            //
+            // })
+
+            const url = await this.officialClient.signatureUrlV4("GET",this.linkTimeout,{
+                headers: {
+
+                }
+            },uri);
             return {
                 ... res,
                 downloadLink: url,
@@ -47,6 +56,30 @@ export class AilyunOss implements OssStorage {
             throw new Error("no such file");
         }
     }
+
+    async getTempUploadLink(uri: string): Promise<UploadInfo> {
+        console.log({
+            "host":this.env.ALIYUN_OSS_END_POINT,
+            "content-type": 'application/octet-stream'
+        });
+        try{
+            const url = await this.officialClient.signatureUrlV4(
+                "PUT",1600,{
+                    headers:{
+                        "host":this.env.ALIYUN_OSS_END_POINT,
+                        "content-type": 'application/octet-stream'
+                    }
+                },uri
+            )
+            return {
+                uploadLink:url,
+                timeout:this.linkTimeout,
+            }
+        }catch(err){
+            throw new Error("get upload temp url error");
+        }
+    }
+
 
 
 }

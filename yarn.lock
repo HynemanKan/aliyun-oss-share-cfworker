@@ -979,10 +979,10 @@
   resolved "http://mirrors.cloud.tencent.com/npm/@tsndr/cloudflare-worker-router/-/cloudflare-worker-router-3.2.10.tgz#5aef066d8ab7c4374f8e316298c7907d2213266d"
   integrity sha512-I3K7zWJQHzOfQ2naHRcKyrIftzZyM2OTIiAkzU4Ap/C3wYvmNNcvOujkDxXqKY5qPEzVlExRVDhOVHqvauTXfQ==
 
-"@types/ali-oss@^6.16.11":
-  version "6.16.11"
-  resolved "http://mirrors.cloud.tencent.com/npm/@types/ali-oss/-/ali-oss-6.16.11.tgz#a70fc1ef54abb54809405c8b5d77dac06011557c"
-  integrity sha512-/AyemPZy93ZXGzEokMsoPFgjH37snpzH4X/fwans/n63HLaCleriCG3PyrkHCPkgHEc9vj9Uo6paqsBN3vJ3OA==
+"@types/ali-oss@6.23.2":
+  version "6.23.2"
+  resolved "https://registry.yarnpkg.com/@types/ali-oss/-/ali-oss-6.23.2.tgz#b00f61bfdc9e658602a00ea126edc2ee9cff6fe9"
+  integrity sha512-j3n+kskvDpceQjnf4tA2pEagneSOdAS6oLQ9lnhpn4ipTvvN8i8iAF1y5Pn2g0/xREOsPXBhCbS0ox3hwuaOBQ==
 
 "@types/crypto-js@^4.2.2":
   version "4.2.2"
@@ -1268,9 +1268,9 @@ agentkeepalive@^3.4.1:
   dependencies:
     humanize-ms "^1.2.1"
 
-ali-oss@^6.x:
+ali-oss@6.23.2:
   version "6.23.0"
-  resolved "http://mirrors.cloud.tencent.com/npm/ali-oss/-/ali-oss-6.23.0.tgz#0bb236428307986ece0bf9243d77d7029d7b6ed2"
+  resolved "https://registry.yarnpkg.com/ali-oss/-/ali-oss-6.23.0.tgz#0bb236428307986ece0bf9243d77d7029d7b6ed2"
   integrity sha512-FipRmyd16Pr/tEey/YaaQ/24Pc3HEpLM9S1DRakEuXlSLXNIJnu1oJtHM53eVYpvW3dXapSjrip3xylZUTIZVQ==
   dependencies:
     address "^1.2.2"

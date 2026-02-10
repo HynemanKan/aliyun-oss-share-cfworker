@@ -2,9 +2,28 @@ import {router} from "../router";
 import {ARG_ERROR, AUTH_ERROR, SUCCESS} from "../utils/responseBody";
 import {randomUUID} from "node:crypto";
 import {fileSignSchema} from "../schema/FileSignSchema";
-import {fileSchema} from "../schema/fileSchema";
+import {fileSchema, preUploadSchema} from "../schema/fileSchema";
 import {AilyunOss} from "../storage/AilyunOss";
 
+
+router.post('/api/v1/file/preUpload',async ({req,env}) => {
+    const typeCheckRes = preUploadSchema.validate(await req.json());
+    if(typeCheckRes.error){
+        return Response.json({
+            ...ARG_ERROR,
+            message:typeCheckRes.error.message,
+        })
+    }
+    const data = typeCheckRes.value;
+    const path = data.path;
+
+    const client = new AilyunOss(env,Number(env.DOWNLOAD_LINK_TIMEOUT));
+    const res =  await client.getTempUploadLink(path);
+    return Response.json({
+        ...SUCCESS,
+        ...res
+    });
+})
 
 
 router.post('/api/v1/file/sign', async ({req,env}) => {

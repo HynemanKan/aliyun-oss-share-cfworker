@@ -1,0 +1,11 @@
+# 全局匹配所有路径
+# 允许的跨域源（精准匹配你的域名，也可写*通配符，但生产环境不推荐）
+Access-Control-Allow-Origin: localhost:5173
+# 允许的跨域方法（必须包含PUT，适配你向OSS的请求）
+Access-Control-Allow-Methods: GET, POST, PUT, OPTIONS
+# 允许的请求头（覆盖OSS PUT需要的Content-Type、Authorization等）
+Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With
+# 预检请求缓存时间（减少OPTIONS请求次数，单位秒）
+Access-Control-Max-Age: 86400
+# 允许携带凭证（如cookie，若不需要可删除）
+Access-Control-Allow-Credentials: true
