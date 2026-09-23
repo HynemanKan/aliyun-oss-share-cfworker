@@ -1,6 +1,6 @@
 import {router} from "../router";
 import {ARG_ERROR, AUTH_ERROR, SUCCESS} from "../utils/responseBody";
-import {randomUUID} from "node:crypto";
+
 import {fileSignSchema} from "../schema/FileSignSchema";
 import {fileSchema, preUploadSchema} from "../schema/fileSchema";
 import {AilyunOss} from "../storage/AilyunOss";
@@ -35,7 +35,7 @@ router.post('/api/v1/file/sign', async ({req,env}) => {
         });
     }
     const data = typeCheckRes.value;
-    const file_id = randomUUID();
+    const file_id = crypto.randomUUID();
     await env.OSS_SHARE_ID.put(file_id,JSON.stringify(data));
     return Response.json({
         ...SUCCESS,

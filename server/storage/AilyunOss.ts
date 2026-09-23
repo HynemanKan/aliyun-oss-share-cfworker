@@ -1,12 +1,9 @@
 import OSS from "ali-oss"
 import {OssStorage, type FileInfo, UploadInfo} from "./types";
-import {OssClient} from "../client/AliyunOssClient";
-
 
 
 export class AilyunOss implements OssStorage {
     private officialClient:OSS
-    private client:OssClient
     constructor(private readonly env:{
         ALIYUN_OSS_END_POINT: string;
         ALIYUN_OSS_BUCKET: string;
@@ -23,35 +20,56 @@ export class AilyunOss implements OssStorage {
             secure:true,
             authorizationV4: true,
         })
-        this.client = new OssClient(
-            env.ALIYUN_OSS_AK,
-            env.ALIYUN_OSS_AS,
-            env.ALIYUN_OSS_REGION,
-            env.ALIYUN_OSS_BUCKET,
-            env.ALIYUN_OSS_END_POINT
-        );
     }
 
     async getFileInfo(uri: string):Promise<FileInfo> {
         try {
-            const res = await this.client.getMeta(uri);
-            console.log(res);
-            // const url = await  this.officialClient.signatureUrlV4(uri,{
-            //     expires:this.linkTimeout,
-            //
-            // })
+            const now = new Date();
+            const ossDate = now.toISOString().replace(/\.\d{3}Z$/, 'Z');
+            const headers: Record<string, string> = {
+                'x-oss-date': ossDate,
+                'x-oss-content-sha256': 'UNSIGNED-PAYLOAD',
+            };
 
-            const url = await this.officialClient.signatureUrlV4("GET",this.linkTimeout,{
+            const authorization = this.officialClient.authorizationV4(
+                'HEAD',
+                { headers, queries: { objectMeta: '' } },
+                this.env.ALIYUN_OSS_BUCKET,
+                uri,
+                ['x-oss-content-sha256']
+            );
+
+            const url = `https://${this.env.ALIYUN_OSS_BUCKET}.${this.env.ALIYUN_OSS_END_POINT}/${uri}?objectMeta`;
+            const response = await fetch(url, {
+                method: 'HEAD',
                 headers: {
+                    ...headers,
+                    'Authorization': authorization,
+                },
+            });
 
-                }
-            },uri);
+            if (!response.ok) {
+                throw new Error(`HEAD request failed: ${response.status} ${response.statusText}`);
+            }
+
+            const strCreateTime = response.headers.get('last-modified');
+            const updateTime = strCreateTime ? new Date(strCreateTime).valueOf() : now.valueOf();
+            const fileSize = Number(response.headers.get('content-length'));
+            const urlSplit = uri.split('/');
+            const fileName = urlSplit[urlSplit.length - 1];
+
+            const downloadUrl = await this.officialClient.signatureUrlV4("GET", this.linkTimeout, {
+                headers: {}
+            }, uri);
+
             return {
-                ... res,
-                downloadLink: url,
+                updateTime,
+                fileSize,
+                fileName,
+                downloadLink: downloadUrl,
                 timeout: this.linkTimeout,
             };
-        }catch(err){
+        } catch(err) {
             console.log(err);
             throw new Error("no such file");
         }
